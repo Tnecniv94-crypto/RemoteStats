@@ -31,8 +31,6 @@ public class MyFrame extends JFrame {
 		JFrame frame= new JFrame();
 		InputPanel inputPanel = new InputPanel();
 		ConsolePanel consolePanel = new ConsolePanel();
-		JTextArea console = new JTextArea(15, 40);
-		JLabel consoleTitle = new JLabel("Console log:");
 		
 	    frame.setTitle("RemoteStats");
 	    frame.setResizable(false);
@@ -44,15 +42,6 @@ public class MyFrame extends JFrame {
 	    
 	    frame.add(inputPanel, BorderLayout.NORTH);
 	    frame.add(consolePanel, BorderLayout.SOUTH);
-	    console.setEditable(false);
-	    consolePanel.setLayout(new BoxLayout(consolePanel, BoxLayout.PAGE_AXIS));
-	    consoleTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    consolePanel.add(consoleTitle);
-	    consolePanel.add(new JScrollPane(console));
-	    
-	    PrintStream printStream = new PrintStream(new CustomOutputStream(console));
-	    System.setOut(printStream);
-	    System.setErr(printStream);
 	    
 	    String token = TokenGenerator.generateToken();
 		
