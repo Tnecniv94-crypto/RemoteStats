@@ -1,8 +1,15 @@
 package view;
 
-import java.awt.Frame;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.ScrollPane;
+import java.io.PrintStream;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import hardware.ReadWindowsNvidiaGpuFanSpeed;
 import hardware.ReadWindowsNvidiaGpuPower;
@@ -11,14 +18,43 @@ import network.TokenGenerator;
 
 public class MyFrame extends JFrame {
 	public static void main(String[] args) {
-		Frame frame= new Frame();
-	    frame.setTitle("RemoteStats");
-	    frame.setSize(1000, 620);
-	    frame.setResizable(false);
-	    frame.setLocation(50, 50);
-	    frame.setVisible(true);
+		setUpView();
 		
-		String token = TokenGenerator.generateToken();
+		/*String token = TokenGenerator.generateToken();
+		
+		runWindowsNvidiaGpusTemperature("localhost", Constants.port, token, Constants.sleepSec);
+		runWindowsNvidiaGpusPower("localhost", Constants.port, token, Constants.sleepSec);
+		runWindowsNvidiaGpusFanSpeed("localhost", Constants.port, token, Constants.sleepSec);*/
+	}
+	
+	private static void setUpView() {
+		JFrame frame= new JFrame();
+		InputPanel inputPanel = new InputPanel();
+		ConsolePanel consolePanel = new ConsolePanel();
+		JTextArea console = new JTextArea(15, 40);
+		JLabel consoleTitle = new JLabel("Console log:");
+		
+	    frame.setTitle("RemoteStats");
+	    frame.setResizable(false);
+	    frame.setSize(800, 600);
+	    frame.setLocation(100, 100);
+	    frame.setVisible(true);
+	    frame.setLayout(new BorderLayout());
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    
+	    frame.add(inputPanel, BorderLayout.NORTH);
+	    frame.add(consolePanel, BorderLayout.SOUTH);
+	    console.setEditable(false);
+	    consolePanel.setLayout(new BoxLayout(consolePanel, BoxLayout.PAGE_AXIS));
+	    consoleTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    consolePanel.add(consoleTitle);
+	    consolePanel.add(new JScrollPane(console));
+	    
+	    PrintStream printStream = new PrintStream(new CustomOutputStream(console));
+	    System.setOut(printStream);
+	    System.setErr(printStream);
+	    
+	    String token = TokenGenerator.generateToken();
 		
 		runWindowsNvidiaGpusTemperature("localhost", Constants.port, token, Constants.sleepSec);
 		runWindowsNvidiaGpusPower("localhost", Constants.port, token, Constants.sleepSec);
