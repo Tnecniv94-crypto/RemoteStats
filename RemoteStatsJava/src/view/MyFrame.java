@@ -5,12 +5,7 @@ import java.awt.Component;
 import java.awt.ScrollPane;
 import java.io.PrintStream;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
 import hardware.ReadWindowsNvidiaGpuFanSpeed;
 import hardware.ReadWindowsNvidiaGpuPower;
 import hardware.ReadWindowsNvidiaGpuTemp;
@@ -28,7 +23,7 @@ public class MyFrame extends JFrame {
 	}
 	
 	private static void setUpView() {
-		JFrame frame= new JFrame();
+		JFrame frame = new JFrame();
 		InputPanel inputPanel = new InputPanel();
 		ConsolePanel consolePanel = new ConsolePanel();
 		
@@ -39,15 +34,24 @@ public class MyFrame extends JFrame {
 	    frame.setVisible(true);
 	    frame.setLayout(new BorderLayout());
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    
 	    frame.add(inputPanel, BorderLayout.NORTH);
 	    frame.add(consolePanel, BorderLayout.SOUTH);
-	    
-	    String token = TokenGenerator.generateToken();
+	}
+	
+	private static void run(boolean temp, boolean power, boolean fans) {
+		String token = TokenGenerator.generateToken();
 		
-		runWindowsNvidiaGpusTemperature("localhost", Constants.port, token, Constants.sleepSec);
-		runWindowsNvidiaGpusPower("localhost", Constants.port, token, Constants.sleepSec);
-		runWindowsNvidiaGpusFanSpeed("localhost", Constants.port, token, Constants.sleepSec);
+		if(temp) {
+			runWindowsNvidiaGpusTemperature("localhost", Constants.port, token, Constants.sleepSec);
+		}
+		
+		if(power) {
+			runWindowsNvidiaGpusPower("localhost", Constants.port, token, Constants.sleepSec);
+		}
+		
+		if(fans) {
+			runWindowsNvidiaGpusFanSpeed("localhost", Constants.port, token, Constants.sleepSec);
+		}
 	}
 	 
 	private static void runWindowsNvidiaGpusTemperature(String ip, int port, String token, int sleepSec) {
