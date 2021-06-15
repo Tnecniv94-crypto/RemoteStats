@@ -1,9 +1,6 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.ScrollPane;
-import java.io.PrintStream;
 
 import javax.swing.JFrame;
 import hardware.ReadWindowsNvidiaGpuFanSpeed;
@@ -12,6 +9,12 @@ import hardware.ReadWindowsNvidiaGpuTemp;
 import network.TokenGenerator;
 
 public class MyFrame extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3782873543529642549L;
+	private static Thread temp, power, fans;
+	
 	public static void main(String[] args) {
 		setUpView();
 		
@@ -38,7 +41,7 @@ public class MyFrame extends JFrame {
 	    frame.add(consolePanel, BorderLayout.SOUTH);
 	}
 	
-	private static void run(boolean temp, boolean power, boolean fans) {
+	public static void run(boolean temp, boolean power, boolean fans) {
 		String token = TokenGenerator.generateToken();
 		
 		if(temp) {
@@ -55,17 +58,17 @@ public class MyFrame extends JFrame {
 	}
 	 
 	private static void runWindowsNvidiaGpusTemperature(String ip, int port, String token, int sleepSec) {
-		Thread temp = new Thread(new ReadWindowsNvidiaGpuTemp(ip, port, token, sleepSec));
+		temp = new Thread(new ReadWindowsNvidiaGpuTemp(ip, port, token, sleepSec));
 		temp.start();
 	}
 	
 	private static void runWindowsNvidiaGpusPower(String ip, int port, String token, int sleepSec) {
-		Thread power = new Thread(new ReadWindowsNvidiaGpuPower(ip, port, token, sleepSec));
+		power = new Thread(new ReadWindowsNvidiaGpuPower(ip, port, token, sleepSec));
 		power.start();
 	}
 	
 	private static void runWindowsNvidiaGpusFanSpeed(String ip, int port, String token, int sleepSec) {
-		Thread fans = new Thread(new ReadWindowsNvidiaGpuFanSpeed(ip, port, token, sleepSec));
+		fans = new Thread(new ReadWindowsNvidiaGpuFanSpeed(ip, port, token, sleepSec));
 		fans.start();
 	}
 }
