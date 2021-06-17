@@ -35,4 +35,8 @@ public class ConsolePanel extends JPanel {
 	    System.setOut(printStream);
 	    System.setErr(printStream);
 	}
+	
+	public JTextArea getConsole() {
+		return console;
+	}
 }

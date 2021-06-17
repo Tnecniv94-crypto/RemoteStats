@@ -18,6 +18,12 @@ public class ReadWindowsNvidiaGpuFanSpeed extends ReadWindowsNvidiaGpu implement
 	
 	@Override
 	public void run() {
+		super.run();
 		readGpusFanSpeedToServer(ip, port, token, sleepSec);
+	}
+	
+	@Override
+	public boolean stop() {
+		return super.stop();
 	}
 }

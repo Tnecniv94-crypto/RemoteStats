@@ -41,16 +41,22 @@ public class RunPanel extends JPanel {
 		run.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
 				if(temp.isSelected()) {
-					MyFrame.run(true, false, false);
+					MyFrame.myFrame.run(true, false, false);
 				}
 				
 				if(power.isSelected()) {
-					MyFrame.run(false, true, false);
+					MyFrame.myFrame.run(false, true, false);
 				}
 				
 				if(fans.isSelected()) {
-					MyFrame.run(false, false, true);
+					MyFrame.myFrame.run(false, false, true);
 				}
+			} 
+		});
+		
+		stop.addActionListener(new ActionListener() { 
+			public void actionPerformed(ActionEvent e) { 
+				MyFrame.myFrame.stopAllThreads();
 			} 
 		});
 	}

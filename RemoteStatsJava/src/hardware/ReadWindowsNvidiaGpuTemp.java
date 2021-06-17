@@ -18,7 +18,13 @@ public class ReadWindowsNvidiaGpuTemp extends ReadWindowsNvidiaGpu implements Ru
 	
 	@Override
 	public void run() {
+		super.run();
 		readGpusTemperatureToServer(ip, port, token, sleepSec);
+	}
+	
+	@Override
+	public boolean stop() {
+		return super.stop();
 	}
 
 }

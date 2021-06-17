@@ -18,10 +18,10 @@ public class TokenPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = -3447772371917727580L;
-	JPanel tokenInfo, tokenGenerate;
-	JButton generateTokenButton;
-	JLabel currentToken, tokenLabel;
-	String token;
+	private JPanel tokenInfo, tokenGenerate;
+	private JButton generateTokenButton;
+	private JLabel currentToken, tokenLabel;
+	private String token;
 	
 	public TokenPanel() {
 		setUpView();
@@ -52,8 +52,12 @@ public class TokenPanel extends JPanel {
 	private void addActionListener() {
 		generateTokenButton.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
-				currentToken.setText(TokenGenerator.generateToken());
+				currentToken.setText(token = TokenGenerator.generateToken());
 			} 
 		});
+	}
+	
+	public String getToken() {
+		return token;
 	}
 }

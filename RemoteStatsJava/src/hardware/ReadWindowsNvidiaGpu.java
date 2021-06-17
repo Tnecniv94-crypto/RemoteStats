@@ -12,7 +12,7 @@ import network.MyTCPClient;
 public class ReadWindowsNvidiaGpu {
 	private Runtime rt = Runtime.getRuntime();
 	private MyTCPClient client;
-	private boolean nvidiaSMIEnvironment = true;
+	private boolean nvidiaSMIEnvironment = true, running = true;
 	
 	/**
 	 * reads the GPUs' temperature and sends it to the server
@@ -29,7 +29,7 @@ public class ReadWindowsNvidiaGpu {
 		
 		client = new MyTCPClient();
 		
-		while(true) {
+		while(running) {
 			//client = new MyTCPClient();
 			temps = readGpusTemp(gpus);
 			System.out.println(client.sendMessage(temps, ip, port, token));
@@ -57,7 +57,7 @@ public class ReadWindowsNvidiaGpu {
 		
 		client = new MyTCPClient();
 		
-		while(true) {
+		while(running) {
 			temps = readGpusPower(gpus);
 			System.out.println(client.sendMessage(temps, ip, port, token));
 			
@@ -84,7 +84,7 @@ public class ReadWindowsNvidiaGpu {
 		
 		client = new MyTCPClient();
 		
-		while(true) {
+		while(running) {
 			temps = readGpusFanSpeed(gpus);
 			System.out.println(client.sendMessage(temps, ip, port, token));
 			
@@ -169,7 +169,7 @@ public class ReadWindowsNvidiaGpu {
 	private String getCurrentNvidiaWindowsTemperature(int gpus) {
 		ArrayList<String> output = getNvidiaWindowsSMI("nvidia-smi.exe --query --display=TEMPERATURE");
 		String line;
-		String ret = "";
+		String ret = "temps:";
 		
 		for(int i = 0; i < gpus - 1; i++) {
 			line = output.get(10 + i * 10);
@@ -177,7 +177,7 @@ public class ReadWindowsNvidiaGpu {
 		}
 		
 		line = output.get(10 + (gpus - 1) * 10);
-		ret += "id=" + (gpus - 1) + " TEMP=" + line.split(": ")[1];
+		ret += "id=" + (gpus - 1) + " TEMP=" + line.split(": ")[1] + "; ";
 		
 		return ret;
 	}
@@ -190,7 +190,7 @@ public class ReadWindowsNvidiaGpu {
 	private String getCurrentNvidiaWindowsPower(int gpus) {
 		ArrayList<String> output = getNvidiaWindowsSMI("nvidia-smi.exe --query --display=POWER");
 		String line;
-		String ret = "";
+		String ret = "power:";
 		
 		for(int i = 0; i < gpus - 1; i++) {
 			line = output.get(11 + i * 16);
@@ -198,7 +198,7 @@ public class ReadWindowsNvidiaGpu {
 		}
 		
 		line = output.get(11 + (gpus - 1) * 16);
-		ret += "id=" + (gpus - 1) + " POWER=" + line.split(": ")[1];
+		ret += "id=" + (gpus - 1) + " POWER=" + line.split(": ")[1] + "; ";
 		
 		return ret;
 	}
@@ -211,7 +211,7 @@ public class ReadWindowsNvidiaGpu {
 	private String getCurrentNvidiaWindowsFanSpeed(int gpus) {
 		ArrayList<String> output = getNvidiaWindowsSMI("nvidia-smi.exe");
 		String line, buf;
-		String ret = "";
+		String ret = "fans:";
 		
 		for(int i = 0; i < gpus - 1; i++) {
 			line = output.get(9 + i * 4);
@@ -221,7 +221,7 @@ public class ReadWindowsNvidiaGpu {
 		
 		line = output.get(9 + (gpus - 1) * 4);
 		buf = line.split("%")[0];
-		ret += "id=" + (gpus - 1) + " FAN=" + buf.substring(2, buf.length()) + "%";
+		ret += "id=" + (gpus - 1) + " FAN=" + buf.substring(2, buf.length()) + "%; ";
 		
 		return ret;
 	}
@@ -259,6 +259,22 @@ public class ReadWindowsNvidiaGpu {
 		}
 		
 		return null;
+	}
+	
+	public void run() {
+		running = true;
+	}
+	
+	public boolean stop() {
+		boolean ret = running;
+		
+		running = false;
+		
+		return ret;
+	}
+	
+	public MyTCPClient getMyTCPClient() {
+		return client;
 	}
 	
 	/**

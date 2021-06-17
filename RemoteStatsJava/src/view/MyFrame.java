@@ -6,29 +6,34 @@ import javax.swing.JFrame;
 import hardware.ReadWindowsNvidiaGpuFanSpeed;
 import hardware.ReadWindowsNvidiaGpuPower;
 import hardware.ReadWindowsNvidiaGpuTemp;
-import network.TokenGenerator;
 
 public class MyFrame extends JFrame {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3782873543529642549L;
-	private static Thread temp, power, fans;
+	private Thread tTemp, tPower, tFans;
+	private ReadWindowsNvidiaGpuTemp temp;
+	private ReadWindowsNvidiaGpuPower power;
+	private ReadWindowsNvidiaGpuFanSpeed fans;
+	private InputPanel inputPanel;
+	private ConsolePanel consolePanel;
+	
+	public static MyFrame myFrame;
+	public static JFrame frame;
 	
 	public static void main(String[] args) {
-		setUpView();
-		
-		/*String token = TokenGenerator.generateToken();
-		
-		runWindowsNvidiaGpusTemperature("localhost", Constants.port, token, Constants.sleepSec);
-		runWindowsNvidiaGpusPower("localhost", Constants.port, token, Constants.sleepSec);
-		runWindowsNvidiaGpusFanSpeed("localhost", Constants.port, token, Constants.sleepSec);*/
+		myFrame = new MyFrame();
 	}
 	
-	private static void setUpView() {
-		JFrame frame = new JFrame();
-		InputPanel inputPanel = new InputPanel();
-		ConsolePanel consolePanel = new ConsolePanel();
+	public MyFrame() {
+		setUpView();
+	}
+	
+	private void setUpView() {
+		frame = new JFrame();
+		inputPanel = new InputPanel();
+		consolePanel = new ConsolePanel();
 		
 	    frame.setTitle("RemoteStats");
 	    frame.setResizable(false);
@@ -41,34 +46,53 @@ public class MyFrame extends JFrame {
 	    frame.add(consolePanel, BorderLayout.SOUTH);
 	}
 	
-	public static void run(boolean temp, boolean power, boolean fans) {
-		String token = TokenGenerator.generateToken();
+	public void run(boolean temp, boolean power, boolean fans) {
+		String token = inputPanel.getTokenPanel().getToken();
 		
 		if(temp) {
-			runWindowsNvidiaGpusTemperature("localhost", Constants.port, token, Constants.sleepSec);
+			System.out.println("Started temperature report thread.");
+			runWindowsNvidiaGpusTemperature(Constants.ip, Constants.port, token, Constants.sleepSec);
 		}
 		
 		if(power) {
-			runWindowsNvidiaGpusPower("localhost", Constants.port, token, Constants.sleepSec);
+			System.out.println("Started power report thread.");
+			runWindowsNvidiaGpusPower(Constants.ip, Constants.port, token, Constants.sleepSec);
 		}
 		
 		if(fans) {
-			runWindowsNvidiaGpusFanSpeed("localhost", Constants.port, token, Constants.sleepSec);
+			System.out.println("Started fan speed report thread.");
+			runWindowsNvidiaGpusFanSpeed(Constants.ip, Constants.port, token, Constants.sleepSec);
+		}
+	}
+	
+	public void stopAllThreads() {
+		consolePanel.getConsole().setText("");
+		
+		if(temp.stop()) {
+			System.out.println("Stopped temperature report thread.");
+		}
+		
+		if(power.stop()) {
+			System.out.println("Stopped power report thread.");
+		}
+		
+		if(fans.stop()) {
+			System.out.println("Stopped fan speed report thread.");
 		}
 	}
 	 
-	private static void runWindowsNvidiaGpusTemperature(String ip, int port, String token, int sleepSec) {
-		temp = new Thread(new ReadWindowsNvidiaGpuTemp(ip, port, token, sleepSec));
-		temp.start();
+	private void runWindowsNvidiaGpusTemperature(String ip, int port, String token, int sleepSec) {
+		tTemp = new Thread(temp = new ReadWindowsNvidiaGpuTemp(ip, port, token, sleepSec));
+		tTemp.start();
 	}
 	
-	private static void runWindowsNvidiaGpusPower(String ip, int port, String token, int sleepSec) {
-		power = new Thread(new ReadWindowsNvidiaGpuPower(ip, port, token, sleepSec));
-		power.start();
+	private void runWindowsNvidiaGpusPower(String ip, int port, String token, int sleepSec) {
+		tPower = new Thread(power = new ReadWindowsNvidiaGpuPower(ip, port, token, sleepSec));
+		tPower.start();
 	}
 	
-	private static void runWindowsNvidiaGpusFanSpeed(String ip, int port, String token, int sleepSec) {
-		fans = new Thread(new ReadWindowsNvidiaGpuFanSpeed(ip, port, token, sleepSec));
-		fans.start();
+	private void runWindowsNvidiaGpusFanSpeed(String ip, int port, String token, int sleepSec) {
+		tFans = new Thread(fans = new ReadWindowsNvidiaGpuFanSpeed(ip, port, token, sleepSec));
+		tFans.start();
 	}
 }

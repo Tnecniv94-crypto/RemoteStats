@@ -18,6 +18,12 @@ public class ReadWindowsNvidiaGpuPower extends ReadWindowsNvidiaGpu implements R
 	
 	@Override
 	public void run() {
+		super.run();
 		readGpusPowerToServer(ip, port, token, sleepSec);
+	}
+	
+	@Override
+	public boolean stop() {
+		return super.stop();
 	}
 }

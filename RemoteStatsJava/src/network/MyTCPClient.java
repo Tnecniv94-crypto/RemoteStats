@@ -19,20 +19,21 @@ public class MyTCPClient {
 		Date date = new Date();
     	String resp;
     	 
-    	startConnection(ip, port);
-        out.println(msg + ", time=" + f.format(date) + ", token=" + token);
+    	if(startConnection(ip, port)) {
+    		 out.println(msg + " time=" + f.format(date) + ", token=" + token);
+    	       
+    		try {
+    			resp = in.readLine();
+    			
+    			return resp;
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    			
+    		stopConnection();
+    	}
        
-		try {
-			resp = in.readLine();
-			
-			return resp;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		stopConnection();
-       
-		return null;
+		return "No response reveived.";
     }
     
     public void stopConnection() {
@@ -46,19 +47,18 @@ public class MyTCPClient {
 		}
     }
     
-    private void startConnection(String ip, int port) {
+    public boolean startConnection(String ip, int port) {
         try {
 			client = new Socket(ip, port);
 			out = new PrintWriter(client.getOutputStream(), true);
 	        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Can't connect to socket on ip=" + ip + " and port=" + port);
+			
+			return false;
 		}
         
+        return true;
     }
 
 

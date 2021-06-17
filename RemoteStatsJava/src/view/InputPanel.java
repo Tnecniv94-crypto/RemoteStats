@@ -27,4 +27,8 @@ public class InputPanel extends JPanel {
 		add(reportPanel, BorderLayout.CENTER);
 		add(runPanel, BorderLayout.SOUTH);
 	}
+	
+	public TokenPanel getTokenPanel() {
+		return tokenPanel;
+	}
 }
