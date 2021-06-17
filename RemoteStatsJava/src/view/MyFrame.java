@@ -1,6 +1,10 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 
 import javax.swing.JFrame;
 import hardware.ReadWindowsNvidiaGpuFanSpeed;

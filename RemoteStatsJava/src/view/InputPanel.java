@@ -21,7 +21,7 @@ public class InputPanel extends JPanel {
 	}
 	
 	private void setUpView() {
-		tokenPanel = new TokenPanel();
+		tokenPanel = new TokenPanel(this);
 		reportPanel = new ReportPanel(this);
 		runPanel = new RunPanel(this);
 		

@@ -20,9 +20,9 @@ public class ReportPanel extends JPanel {
 	}
 	
 	private void setUpView() {
-		temp = new JCheckBox("report temperature", true);
-		power = new JCheckBox("report power", true);
-		fans = new JCheckBox("report fans", true);
+		temp = new JCheckBox("report GPU temperature", true);
+		power = new JCheckBox("report GPU power", true);
+		fans = new JCheckBox("report GPU fans", true);
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		//temp.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -46,7 +46,7 @@ public class ReportPanel extends JPanel {
 		return fans;
 	}
 	
-	public InputPanel getContainer() {
+	public InputPanel getContainsThis() {
 		return container;
 	}
 }
