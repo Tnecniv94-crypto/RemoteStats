@@ -10,9 +10,12 @@ public class ReportPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = -7207657249518835133L;
+	private InputPanel container;
 	private JCheckBox temp, power, fans;
 	
-	public ReportPanel() {
+	public ReportPanel(InputPanel container) {
+		this.container = container;
+		
 		setUpView();
 	}
 	
@@ -41,5 +44,9 @@ public class ReportPanel extends JPanel {
 	
 	public JCheckBox getFans() {
 		return fans;
+	}
+	
+	public InputPanel getContainer() {
+		return container;
 	}
 }

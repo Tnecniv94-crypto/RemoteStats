@@ -14,13 +14,11 @@ public class RunPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = -785098582113181256L;
+	private InputPanel container;
 	private JButton run, stop;
-	private JCheckBox temp, power, fans;
 	
-	public RunPanel(JCheckBox temp, JCheckBox power, JCheckBox fans) {
-		this.temp = temp;
-		this.power = power;
-		this.fans = fans;
+	public RunPanel(InputPanel container) {
+		this.container = container;
 		
 		setUpView();
 	}
@@ -31,6 +29,7 @@ public class RunPanel extends JPanel {
 		
 		setLayout(new FlowLayout());
 		add(run);
+		stop.setEnabled(false);
 		add(stop);
 		setBorder(BorderFactory.createTitledBorder("Run/Stop"));
 		
@@ -38,25 +37,42 @@ public class RunPanel extends JPanel {
 	}
 	
 	private void addActionListeners() {
+		ReportPanel reportPanel = container.getReportPanel();
+		boolean temp = reportPanel.getTemp().isSelected(), power = reportPanel.getPower().isSelected(), fans = reportPanel.getFans().isSelected();
+		
 		run.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
-				if(temp.isSelected()) {
-					MyFrame.myFrame.run(true, false, false);
+				if(temp) {
+					container.getFrame().run(true, false, false); // MyFrame
 				}
 				
-				if(power.isSelected()) {
-					MyFrame.myFrame.run(false, true, false);
+				if(power) {
+					container.getFrame().run(false, true, false);
 				}
 				
-				if(fans.isSelected()) {
-					MyFrame.myFrame.run(false, false, true);
+				if(fans) {
+					container.getFrame().run(false, false, true);
+				}
+				
+				if(temp | power | fans) {
+					run.setEnabled(false);
+					stop.setEnabled(true);
+					reportPanel.getTemp().setEnabled(false);
+					reportPanel.getPower().setEnabled(false);
+					reportPanel.getFans().setEnabled(false);
 				}
 			} 
 		});
 		
 		stop.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
-				MyFrame.myFrame.stopAllThreads();
+				container.getFrame().stopAllThreads();
+				
+				run.setEnabled(true);
+				stop.setEnabled(false);
+				reportPanel.getTemp().setEnabled(true);
+				reportPanel.getPower().setEnabled(true);
+				reportPanel.getFans().setEnabled(true);
 			} 
 		});
 	}

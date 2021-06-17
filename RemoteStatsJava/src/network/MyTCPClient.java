@@ -20,7 +20,7 @@ public class MyTCPClient {
     	String resp;
     	 
     	if(startConnection(ip, port)) {
-    		 out.println(msg + " time=" + f.format(date) + ", token=" + token);
+    		 out.println(msg + "time=" + f.format(date) + ", token=" + token);
     	       
     		try {
     			resp = in.readLine();

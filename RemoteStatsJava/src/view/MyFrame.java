@@ -18,12 +18,11 @@ public class MyFrame extends JFrame {
 	private ReadWindowsNvidiaGpuFanSpeed fans;
 	private InputPanel inputPanel;
 	private ConsolePanel consolePanel;
-	
-	public static MyFrame myFrame;
+
 	public static JFrame frame;
 	
 	public static void main(String[] args) {
-		myFrame = new MyFrame();
+		new MyFrame();
 	}
 	
 	public MyFrame() {
@@ -32,7 +31,7 @@ public class MyFrame extends JFrame {
 	
 	private void setUpView() {
 		frame = new JFrame();
-		inputPanel = new InputPanel();
+		inputPanel = new InputPanel(this);
 		consolePanel = new ConsolePanel();
 		
 	    frame.setTitle("RemoteStats");
@@ -94,5 +93,9 @@ public class MyFrame extends JFrame {
 	private void runWindowsNvidiaGpusFanSpeed(String ip, int port, String token, int sleepSec) {
 		tFans = new Thread(fans = new ReadWindowsNvidiaGpuFanSpeed(ip, port, token, sleepSec));
 		tFans.start();
+	}
+	
+	public InputPanel getInputPanel() {
+		return inputPanel;
 	}
 }
