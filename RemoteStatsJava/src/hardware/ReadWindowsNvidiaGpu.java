@@ -32,7 +32,7 @@ public class ReadWindowsNvidiaGpu {
 		while(running) {
 			//client = new MyTCPClient();
 			temps = readGpusTemp(gpus);
-			System.out.println(client.sendMessage("update; " + temps, ip, port, token));
+			System.out.println(client.sendMessage("update temps; " + temps, ip, port, token));
 			
 			try {
 				TimeUnit.SECONDS.sleep(sleepSec);
@@ -59,7 +59,7 @@ public class ReadWindowsNvidiaGpu {
 		
 		while(running) {
 			power = readGpusPower(gpus);
-			System.out.println(client.sendMessage("update; " + power, ip, port, token));
+			System.out.println(client.sendMessage("update power; " + power, ip, port, token));
 			
 			try {
 				TimeUnit.SECONDS.sleep(sleepSec);
@@ -86,7 +86,7 @@ public class ReadWindowsNvidiaGpu {
 		
 		while(running) {
 			fans = readGpusFanSpeed(gpus);
-			System.out.println(client.sendMessage("update; " + fans, ip, port, token));
+			System.out.println(client.sendMessage("update fans; " + fans, ip, port, token));
 			
 			try {
 				TimeUnit.SECONDS.sleep(sleepSec);
