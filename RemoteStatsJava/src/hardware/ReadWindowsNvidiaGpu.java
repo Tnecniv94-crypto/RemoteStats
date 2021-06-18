@@ -32,7 +32,7 @@ public class ReadWindowsNvidiaGpu {
 		while(running) {
 			//client = new MyTCPClient();
 			temps = readGpusTemp(gpus);
-			System.out.println(client.sendMessage(temps, ip, port, token));
+			System.out.println(client.sendMessage("update; " + temps, ip, port, token));
 			
 			try {
 				TimeUnit.SECONDS.sleep(sleepSec);
@@ -49,7 +49,7 @@ public class ReadWindowsNvidiaGpu {
 	 */
 	protected void readGpusPowerToServer(String ip, int port, String token, int sleepSec) {
 		int gpus = getGpusNumber();
-		String temps;
+		String power;
 		
 		if(gpus < 1) {
 			System.out.println("Exiting. No GPU found!");
@@ -58,8 +58,8 @@ public class ReadWindowsNvidiaGpu {
 		client = new MyTCPClient();
 		
 		while(running) {
-			temps = readGpusPower(gpus);
-			System.out.println(client.sendMessage(temps, ip, port, token));
+			power = readGpusPower(gpus);
+			System.out.println(client.sendMessage("update; " + power, ip, port, token));
 			
 			try {
 				TimeUnit.SECONDS.sleep(sleepSec);
@@ -76,7 +76,7 @@ public class ReadWindowsNvidiaGpu {
 	 */
 	protected void readGpusFanSpeedToServer(String ip, int port, String token, int sleepSec) {
 		int gpus = getGpusNumber();
-		String temps;
+		String fans;
 		
 		if(gpus < 1) {
 			System.out.println("Exiting. No GPU found!");
@@ -85,13 +85,40 @@ public class ReadWindowsNvidiaGpu {
 		client = new MyTCPClient();
 		
 		while(running) {
-			temps = readGpusFanSpeed(gpus);
-			System.out.println(client.sendMessage(temps, ip, port, token));
+			fans = readGpusFanSpeed(gpus);
+			System.out.println(client.sendMessage("update; " + fans, ip, port, token));
 			
 			try {
 				TimeUnit.SECONDS.sleep(sleepSec);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * deletes the stats file from the server
+	 * @param ip
+	 * @param port
+	 * @param token folder to delete file from
+	 * @param stats valid strings: "temps", "power", "fans"
+	 */
+	protected void deleteGpusStatsFromServer(String ip, int port, String token, String stats) {
+		switch(stats) {
+			case "temps": {
+				client.sendMessage("remove: temps; ", ip, port, token);
+				break;
+			}
+			case "power": {
+				client.sendMessage("remove: power; ", ip, port, token);
+				break;
+			}
+			case "fans": {
+				client.sendMessage("remove: fans; ", ip, port, token);
+				break;
+			}
+			default: {
+				System.out.println("Unknow param " + stats + " for stats.");
 			}
 		}
 	}
@@ -144,7 +171,7 @@ public class ReadWindowsNvidiaGpu {
 	private String[][] getWindowsNvidiaGpusIdNameMapping() {
 		String[][] ret;
 		String[] buf;
-		ArrayList<String> smi = getNvidiaWindowsSMI("nvidia-smi.exe -L");
+		ArrayList<String> smi = getNvidiaWindowsSMI("nvidia-smi -L");
 		
 		ret = new String[smi.size()][2];
 		
@@ -167,7 +194,7 @@ public class ReadWindowsNvidiaGpu {
 	 * @return String with GPU-ids and their temperature
 	 */
 	private String getCurrentNvidiaWindowsTemperature(int gpus) {
-		ArrayList<String> output = getNvidiaWindowsSMI("nvidia-smi.exe --query --display=TEMPERATURE");
+		ArrayList<String> output = getNvidiaWindowsSMI("nvidia-smi --query --display=TEMPERATURE");
 		String line;
 		String ret = "temps:";
 		
@@ -188,7 +215,7 @@ public class ReadWindowsNvidiaGpu {
 	 * @return
 	 */
 	private String getCurrentNvidiaWindowsPower(int gpus) {
-		ArrayList<String> output = getNvidiaWindowsSMI("nvidia-smi.exe --query --display=POWER");
+		ArrayList<String> output = getNvidiaWindowsSMI("nvidia-smi --query --display=POWER");
 		String line;
 		String ret = "power:";
 		
@@ -209,7 +236,7 @@ public class ReadWindowsNvidiaGpu {
 	 * @return
 	 */
 	private String getCurrentNvidiaWindowsFanSpeed(int gpus) {
-		ArrayList<String> output = getNvidiaWindowsSMI("nvidia-smi.exe");
+		ArrayList<String> output = getNvidiaWindowsSMI("nvidia-smi");
 		String line, buf;
 		String ret = "fans:";
 		
@@ -273,6 +300,10 @@ public class ReadWindowsNvidiaGpu {
 		return ret;
 	}
 	
+	public boolean isRunning() {
+		return running;
+	}
+	
 	public MyTCPClient getMyTCPClient() {
 		return client;
 	}
@@ -286,7 +317,7 @@ public class ReadWindowsNvidiaGpu {
 		
 		switch(param) {
 			case "TEMP": {
-				smiLines = getNvidiaWindowsSMI("nvidia-smi.exe --query --display=TEMPERATURE");
+				smiLines = getNvidiaWindowsSMI("nvidia-smi --query --display=TEMPERATURE");
 				
 				for(String l : smiLines) {
 					System.out.println(l);
@@ -296,7 +327,7 @@ public class ReadWindowsNvidiaGpu {
 				break;
 			}
 			case "POWER": {
-				smiLines = getNvidiaWindowsSMI("nvidia-smi.exe --query --display=POWER");
+				smiLines = getNvidiaWindowsSMI("nvidia-smi --query --display=POWER");
 				
 				for(String l : smiLines) {
 					System.out.println(l);
@@ -306,7 +337,7 @@ public class ReadWindowsNvidiaGpu {
 				break;
 			}
 			case "FAN": {
-				smiLines = getNvidiaWindowsSMI("nvidia-smi.exe");
+				smiLines = getNvidiaWindowsSMI("nvidia-smi");
 				
 				for(String l : smiLines) {
 					System.out.println(l);
@@ -316,7 +347,7 @@ public class ReadWindowsNvidiaGpu {
 				break;
 			}
 			case "NAME": {
-				smiLines = getNvidiaWindowsSMI("nvidia-smi.exe -L");
+				smiLines = getNvidiaWindowsSMI("nvidia-smi -L");
 				
 				for(String l : smiLines) {
 					System.out.println(l);

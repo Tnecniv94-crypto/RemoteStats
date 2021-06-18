@@ -11,6 +11,15 @@ public class ReadWindowsNvidiaGpuTemp extends ReadWindowsNvidiaGpu implements Ru
 		this.sleepSec = sleepSec;
 	}
 	
+	public void deleteGpusTempFromServer(String ip, int port, String token) {
+		if(!isRunning()) {
+			super.deleteGpusStatsFromServer(ip, port, token, "temps");
+		}
+		else {
+			System.out.println("Can't delete temperature file, because instance is reporting.");
+		}
+	}
+	
 	@Override
 	protected void readGpusTemperatureToServer(String ip, int port, String token, int sleepSec) {
 		super.readGpusTemperatureToServer(ip, port, token, sleepSec);

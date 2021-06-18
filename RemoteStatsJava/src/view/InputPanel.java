@@ -39,7 +39,7 @@ public class InputPanel extends JPanel {
 		return reportPanel;
 	}
 	
-	public MyFrame getFrame() {
+	public MyFrame getContainsThis() {
 		return container;
 	}
 }

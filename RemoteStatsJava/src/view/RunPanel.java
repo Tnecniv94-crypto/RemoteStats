@@ -38,20 +38,22 @@ public class RunPanel extends JPanel {
 	
 	private void addActionListeners() {
 		ReportPanel reportPanel = container.getReportPanel();
+		TokenPanel tokenPanel = container.getTokenPanel();
+		
 		boolean temp = reportPanel.getTemp().isSelected(), power = reportPanel.getPower().isSelected(), fans = reportPanel.getFans().isSelected();
 		
 		run.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
 				if(temp) {
-					container.getFrame().run(true, false, false); // MyFrame
+					container.getContainsThis().run(true, false, false); // MyFrame
 				}
 				
 				if(power) {
-					container.getFrame().run(false, true, false);
+					container.getContainsThis().run(false, true, false);
 				}
 				
 				if(fans) {
-					container.getFrame().run(false, false, true);
+					container.getContainsThis().run(false, false, true);
 				}
 				
 				if(temp | power | fans) {
@@ -60,20 +62,26 @@ public class RunPanel extends JPanel {
 					reportPanel.getTemp().setEnabled(false);
 					reportPanel.getPower().setEnabled(false);
 					reportPanel.getFans().setEnabled(false);
+					tokenPanel.getGenerateToken().setEnabled(false);
 				}
 			} 
 		});
 		
 		stop.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
-				container.getFrame().stopAllThreads();
+				container.getContainsThis().stopAllThreads();
 				
 				run.setEnabled(true);
 				stop.setEnabled(false);
 				reportPanel.getTemp().setEnabled(true);
 				reportPanel.getPower().setEnabled(true);
 				reportPanel.getFans().setEnabled(true);
+				tokenPanel.getGenerateToken().setEnabled(true);
 			} 
 		});
+	}
+	
+	public InputPanel getContainsThis() {
+		return container;
 	}
 }

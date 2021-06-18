@@ -11,6 +11,15 @@ public class ReadWindowsNvidiaGpuFanSpeed extends ReadWindowsNvidiaGpu implement
 		this.sleepSec = sleepSec;
 	}
 	
+	public void deleteGpusFanSpeedFromServer(String ip, int port, String token) {
+		if(!isRunning()) {
+			super.deleteGpusStatsFromServer(ip, port, token, "fans");
+		}
+		else {
+			System.out.println("Can't delete fans speed file, because instance is reporting.");
+		}
+	}
+	
 	@Override
 	protected void readGpusFanSpeedToServer(String ip, int port, String token, int sleepSec) {
 		super.readGpusFanSpeedToServer(ip, port, token, sleepSec);

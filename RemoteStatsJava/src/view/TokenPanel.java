@@ -25,7 +25,7 @@ public class TokenPanel extends JPanel {
 	private static final long serialVersionUID = -3447772371917727580L;
 	private InputPanel container;
 	private JPanel tokenInfo, tokenGenerate;
-	private JButton generateTokenButton;
+	private JButton generateToken;
 	private JLabel currentToken, tokenLabel;
 	private String token;
 	
@@ -41,15 +41,15 @@ public class TokenPanel extends JPanel {
 		tokenGenerate = new JPanel(new FlowLayout());
 		tokenLabel = new JLabel("Current token: ");
 		currentToken = new JLabel(token);
-		generateTokenButton = new JButton("Generate new token!");
+		generateToken = new JButton("Generate new token!");
 		
 		setLayout(new BorderLayout());
 		tokenLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		currentToken.setAlignmentX(Component.CENTER_ALIGNMENT);
-		generateTokenButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		generateToken.setAlignmentX(Component.CENTER_ALIGNMENT);
 		tokenInfo.add(tokenLabel);
 		tokenInfo.add(currentToken);
-		tokenGenerate.add(generateTokenButton);
+		tokenGenerate.add(generateToken);
 		add(tokenInfo, BorderLayout.NORTH);
 		add(tokenGenerate, BorderLayout.CENTER);
 		setBorder(BorderFactory.createTitledBorder("Token info"));
@@ -58,11 +58,12 @@ public class TokenPanel extends JPanel {
 	}
 	
 	private void addActionListener() {
-		generateTokenButton.addActionListener(new ActionListener() { 
+		generateToken.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
 				if(JOptionPane.showConfirmDialog(container,
                         "If you create a new token, you will have to update the current token in your mobile phone!", "Attention", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					currentToken.setText(token = generateTokenToConfig());
+					container.getContainsThis().delete(true, true, true);
 				}
 			} 
 		});
@@ -116,6 +117,10 @@ public class TokenPanel extends JPanel {
 	
 	public String getToken() {
 		return token;
+	}
+
+	public JButton getGenerateToken() {
+		return generateToken;
 	}
 	
 	public InputPanel getContainsThis() {
