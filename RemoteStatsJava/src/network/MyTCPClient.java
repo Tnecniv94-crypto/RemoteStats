@@ -10,55 +10,54 @@ import java.util.Date;
 
 public class MyTCPClient {
 	private Socket client;
-    private PrintWriter out;
-    private BufferedReader in;
-    
-    public String sendMessage(String msg, String ip, int port, String token) {
-    	SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
+	private PrintWriter out;
+	private BufferedReader in;
+
+	public String sendMessage(String msg, String ip, int port, String token) {
+		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
-    	String resp;
-    	 
-    	if(startConnection(ip, port)) {
-    		 out.println(msg + "time=" + f.format(date) + ", token=" + token);
-    	       
-    		try {
-    			resp = in.readLine();
-    			
-    			return resp;
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
-    			
-    		stopConnection();
-    	}
-       
+		String resp;
+
+		if (startConnection(ip, port)) {
+			out.println(msg + "time=" + f.format(date) + "; token=" + token);
+
+			try {
+				resp = in.readLine();
+
+				return resp;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			stopConnection();
+		}
+
 		return "No response reveived.";
-    }
-    
-    public void stopConnection() {
-        try {
+	}
+
+	public void stopConnection() {
+		try {
 			in.close();
 			out.close();
-	        client.close();
+			client.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
-    
-    public boolean startConnection(String ip, int port) {
-        try {
+	}
+
+	public boolean startConnection(String ip, int port) {
+		try {
 			client = new Socket(ip, port);
 			out = new PrintWriter(client.getOutputStream(), true);
-	        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		} catch (IOException e) {
 			System.out.println("Can't connect to socket on ip=" + ip + " and port=" + port);
-			
+
 			return false;
 		}
-        
-        return true;
-    }
 
+		return true;
+	}
 
 }
