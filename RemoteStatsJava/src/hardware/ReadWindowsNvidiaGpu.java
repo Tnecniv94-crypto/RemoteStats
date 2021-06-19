@@ -12,7 +12,7 @@ import network.MyTCPClient;
 public class ReadWindowsNvidiaGpu {
 	private Runtime rt = Runtime.getRuntime();
 	private MyTCPClient client;
-	private boolean nvidiaSMIEnvironment = true, running = true;
+	private boolean nvidiaSMIEnvironment = true, running = false;
 
 	/**
 	 * reads the GPUs' temperature and sends it to the server
@@ -20,6 +20,11 @@ public class ReadWindowsNvidiaGpu {
 	 * @param ip
 	 * @param port
 	 */
+	
+	public ReadWindowsNvidiaGpu() {
+		client = new MyTCPClient();
+	}
+	
 	protected void readGpusTemperatureToServer(String ip, int port, String token, int sleepSec) {
 		int gpus = getGpusNumber();
 		String temps;
@@ -27,8 +32,6 @@ public class ReadWindowsNvidiaGpu {
 		if (gpus < 1) {
 			System.out.println("Exiting. No GPU found!");
 		}
-
-		client = new MyTCPClient();
 
 		while (running) {
 			// client = new MyTCPClient();
@@ -57,8 +60,6 @@ public class ReadWindowsNvidiaGpu {
 			System.out.println("Exiting. No GPU found!");
 		}
 
-		client = new MyTCPClient();
-
 		while (running) {
 			power = readGpusPower(gpus);
 			System.out.println(client.sendMessage("update _power; " + power, ip, port, token));
@@ -85,8 +86,6 @@ public class ReadWindowsNvidiaGpu {
 			System.out.println("Exiting. No GPU found!");
 		}
 
-		client = new MyTCPClient();
-
 		while (running) {
 			fans = readGpusFanSpeed(gpus);
 			System.out.println(client.sendMessage("update _fans; " + fans, ip, port, token));
@@ -110,15 +109,15 @@ public class ReadWindowsNvidiaGpu {
 	protected void deleteGpusStatsFromServer(String ip, int port, String token, String stats) {
 		switch (stats) {
 		case "temps": {
-			client.sendMessage("remove: _temps; ", ip, port, token);
+			System.out.println(client.sendMessage("remove _temps; ", ip, port, token));
 			break;
 		}
 		case "power": {
-			client.sendMessage("remove: _power; ", ip, port, token);
+			System.out.println(client.sendMessage("remove _power; ", ip, port, token));
 			break;
 		}
 		case "fans": {
-			client.sendMessage("remove: _fans; ", ip, port, token);
+			System.out.println(client.sendMessage("remove _fans; ", ip, port, token));
 			break;
 		}
 		default: {

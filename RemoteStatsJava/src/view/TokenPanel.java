@@ -62,8 +62,9 @@ public class TokenPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) { 
 				if(JOptionPane.showConfirmDialog(container,
                         "If you create a new token, you will have to update the current token in your mobile phone!", "Attention", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-					currentToken.setText(token = generateTokenToConfig());
 					container.getContainsThis().delete(true, true, true);
+					currentToken.setText(token = generateTokenToConfig());
+					container.getContainsThis().setUpData();
 				}
 			} 
 		});

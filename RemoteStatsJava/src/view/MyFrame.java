@@ -55,7 +55,7 @@ public class MyFrame extends JFrame {
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("icon.jpg"));
 	}
 
-	private void setUpData() {
+	public void setUpData() {
 		String token;
 		
 		ip = getIpFromConfig();
