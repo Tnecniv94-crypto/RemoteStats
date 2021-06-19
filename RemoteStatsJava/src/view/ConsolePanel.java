@@ -14,8 +14,8 @@ public class ConsolePanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 3550141002587630858L;
-	JTextArea console;
-	JLabel consoleTitle;
+	private JTextArea console;
+	private JLabel consoleTitle;
 	
 	public ConsolePanel() {
 		setUpView();

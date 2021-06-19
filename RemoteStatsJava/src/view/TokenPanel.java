@@ -96,15 +96,17 @@ public class TokenPanel extends JPanel {
 	
 	private String generateTokenToConfig() {
 		Properties prop = new Properties();
-		FileOutputStream fStream;
+		FileInputStream fInStream;
+		FileOutputStream fOutStream;
 		String token;
 		
 		try {
-			prop.load(new FileInputStream("config.properties"));
+			prop.load(fInStream = new FileInputStream("config.properties"));
 			token = TokenGenerator.generateToken();
 			prop.setProperty("token", token);
-			prop.store(fStream = new FileOutputStream("config.properties"), null);
-			fStream.close();
+			prop.store(fOutStream = new FileOutputStream("config.properties"), null);
+			fInStream.close();
+			fOutStream.close();
 			
 			return token;
 		} catch (IOException e) {

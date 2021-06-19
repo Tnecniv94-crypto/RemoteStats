@@ -25,11 +25,8 @@ public class ReportPanel extends JPanel {
 		fans = new JCheckBox("report GPU fans", true);
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		//temp.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(temp);
-		//power.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(power);
-		//power.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(fans);
 		setBorder(BorderFactory.createTitledBorder("Report"));
 	}
